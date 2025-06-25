@@ -1,27 +1,13 @@
 import NewsletterSection from "./newsletter-section";
+import { KevinGfeFooter } from "gfe-footer";
 
 export default function Home() {
   return (
     <div>
-      <main className="flex flex-col items-center h-screen bg-gray-200">
+      <main className="flex flex-col items-center h-full min-h-screen bg-gradient-to-b from-gray-50 to-[#d2d6db]">
         <NewsletterSection />
       </main>
-      <footer>
-        <div className="credits">
-          A challenge by
-          <a
-            href="https://www.greatfrontend.com/projects?ref=challenges"
-            target="_blank"
-          >
-            GreatFrontEnd Projects
-          </a>
-          . Built by
-          <a href="https://www.greatfrontend.com/u/kevinn858" target="_blank">
-            Kevin Nguyen
-          </a>
-          .
-        </div>
-      </footer>
+      <KevinGfeFooter />
     </div>
   );
 }
