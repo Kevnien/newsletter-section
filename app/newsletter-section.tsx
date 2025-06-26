@@ -22,7 +22,7 @@ export default function NewsletterSection() {
           <input
             type="email"
             placeholder="Enter your email"
-            className="p-2 border rounded w-full text-neutral-600 border-neutral-200 bg-neutral-50 sm:w-1/2"
+            className="p-2 border rounded w-full text-neutral-600 border-neutral-200 bg-neutral-50 sm:w-1/2 focus:bg-white focus:border-gray-400"
             required
           />
           <p className="preSubscribeAssuranceText text-sm text-neutral-600 sm:order-3">
@@ -30,7 +30,7 @@ export default function NewsletterSection() {
           </p>
           <button
             type="submit"
-            className="p-2 text-white rounded w-full sm:w-auto sm:pl-4 sm:pr-4 bg-indigo-800 text-sm"
+            className="p-2 text-white rounded w-full sm:w-auto sm:pl-4 sm:pr-4 bg-indigo-800 text-sm hover:bg-indigo-950"
           >
             Subscribe
           </button>
