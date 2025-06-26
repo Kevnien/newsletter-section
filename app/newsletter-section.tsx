@@ -31,6 +31,7 @@ export default function NewsletterSection() {
           <button
             type="submit"
             className="p-2 text-white rounded w-full sm:w-auto sm:pl-4 sm:pr-4 bg-indigo-800 text-sm hover:bg-indigo-950"
+            tabIndex={0}
           >
             Subscribe
           </button>
