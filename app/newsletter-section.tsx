@@ -20,7 +20,7 @@ export default function NewsletterSection() {
     hasValidated && setError(getValidateEmailText());
   }, [hasValidated, emailAddress]);
 
-  getValidateEmailText(): string {
+  function getValidateEmailText(): string {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const trimmedEmail = emailAddress.trim();
     if (!trimmedEmail.length) return emailRequiredText;
@@ -28,7 +28,7 @@ export default function NewsletterSection() {
     return "";
   }
 
-  handleSubmit() {
+  function handleSubmit() {
     setError(getValidateEmailText());
     setHasValidated(true);
   }
