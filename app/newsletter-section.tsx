@@ -1,4 +1,5 @@
 import MarketingPoint from "./marketing-point";
+import { useEffect, useState } from 'react';
 
 const title = "Get the finest curated abstracts delivered weekly to your inbox";
 const marketingPoints = [
@@ -7,8 +8,31 @@ const marketingPoints = [
   "Regular doses or artistic inspiration",
 ];
 const preSubscribeAssuranceText = "We only send you the best! No spam.";
+const emailRequiredText = "Email address is required.";
+const emailInvalidText = "Please enter a valid email.";
 
 export default function NewsletterSection() {
+  const [emailAddress, setEmailAddress] = useState("");
+  const [hasValidated, setHasValidated] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    hasValidated && setError(getValidateEmailText());
+  }, [hasValidated, emailAddress]);
+
+  getValidateEmailText() {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const trimmedEmail = emailAddress.trim();
+    if (!trimmedEmail.length) return emailRequiredText;
+    if (emailRegex.test()) return emailInvalidText;
+    return "";
+  }
+
+  handleSubmit() {
+    setError(getValidateEmailText());
+    setHasValidated(true);
+  }
+  
   return (
     <div className="flex flex-col md:flex-row items-start gap-4 m-4 p-4 bg-white rounded text-neutral-900 sm:h-full sm:items-center sm:pt-16 sm:pb-16 sm:gap-16 md:h-full">
       <div className="textContent flex flex-col gap-8 sm:gap-16 w-full md:w-1/2 md:ml-16">
@@ -24,6 +48,7 @@ export default function NewsletterSection() {
             placeholder="Enter your email"
             className="p-2 border rounded w-full text-neutral-600 border-neutral-200 bg-neutral-50 sm:w-1/2 focus:bg-white focus:border-gray-400"
             required
+            onChange({(e) => setEmail(e.target.value))}
           />
           <p className="preSubscribeAssuranceText text-sm text-neutral-600 sm:order-3">
             {preSubscribeAssuranceText}
