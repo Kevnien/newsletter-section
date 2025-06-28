@@ -11,11 +11,18 @@ const marketingPoints = [
 const preSubscribeAssuranceText = "We only send you the best! No spam.";
 const emailRequiredText = "Email address is required.";
 const emailInvalidText = "Please enter a valid email.";
+const url = "https://www.greatfrontend.com/api/projects/challenges/newsletter";
+const subscriptionSuccessText =
+  "Subscription successful! Please check your email to confirm.";
+const subscriptionErrorText =
+  "Failed to subscribe. Please ensure your email is correct or try again later.";
 
 export default function NewsletterSection(): ReactElement {
   const [emailAddress, setEmailAddress] = useState("");
   const [hasValidated, setHasValidated] = useState(false);
   const [error, setError] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  const [isToastSuccess, setIsToastSuccess] = useState(true);
 
   const getValidateEmailText = useCallback((): string => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,9 +32,30 @@ export default function NewsletterSection(): ReactElement {
     return "";
   }, [emailAddress]);
 
-  const handleSubmit = (): void => {
+  const handleSubmit = async (): Promise<void> => {
     setError(getValidateEmailText());
     setHasValidated(true);
+    if (error) return;
+    console.log("Submitting email:", emailAddress);
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: emailAddress }),
+      });
+      if (response.ok) {
+        setIsToastSuccess(true);
+        setToastMessage(subscriptionSuccessText);
+        setEmailAddress("");
+        setHasValidated(false);
+      }
+    } catch (error) {
+      setIsToastSuccess(false);
+      setToastMessage(subscriptionErrorText);
+      console.error("Subscription error:", error);
+    }
   };
 
   useEffect(() => {
@@ -35,6 +63,11 @@ export default function NewsletterSection(): ReactElement {
       setError(getValidateEmailText());
     }
   }, [hasValidated, emailAddress, getValidateEmailText]);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    setTimeout(() => setToastMessage(""), 3000);
+  }, [toastMessage]);
 
   return (
     <div className="flex flex-col md:flex-row items-start gap-4 m-4 p-4 bg-white rounded text-neutral-900 sm:h-full sm:items-center sm:pt-16 sm:pb-16 sm:gap-16 md:h-full">
@@ -63,7 +96,7 @@ export default function NewsletterSection(): ReactElement {
           </p>
           <button
             type="submit"
-            className="p-2 text-white rounded w-full sm:w-auto sm:pl-4 sm:pr-4 bg-indigo-800 text-sm hover:bg-indigo-950"
+            className="p-2 text-white rounded w-full sm:w-auto sm:pl-4 sm:pr-4 bg-indigo-800 text-sm hover:bg-indigo-950 focus:bg-indigo-950"
             tabIndex={0}
             onClick={(e) => {
               e.preventDefault();
@@ -80,6 +113,32 @@ export default function NewsletterSection(): ReactElement {
         alt="abstract samples"
         className="rounded-xl sm:rounded-2xl md:rounded-3xl object-fit md:w-1/2"
       />
+      {toastMessage && (
+        <div className="toast-container fixed top-0 left-0 w-full flex justify-center">
+          <div
+            className={`toast text-center flex p-2 m-4 rounded-2xl text-sm gap-2 items-center ${
+              isToastSuccess ? "bg-green-50" : "bg-red-50"
+            }`}
+          >
+            {isToastSuccess ? (
+              <p className="toast-success-oval pl-2 pr-2 p-1 rounded-xl bg-white text-green-700 shadow-md flex">
+                Success
+              </p>
+            ) : (
+              <p className="toast-error-oval pl-2 pr-2 p-1 rounded-xl bg-white text-red-800 shadow-md flex">
+                Error
+              </p>
+            )}
+            <p
+              className={`${
+                isToastSuccess ? "text-green-700" : "text-red-600"
+              }`}
+            >
+              {toastMessage}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
